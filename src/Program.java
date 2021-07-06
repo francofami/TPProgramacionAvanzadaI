@@ -18,8 +18,10 @@ public class Program {
 		UConexion.conectarBD();		
 
 		Persona per = new Persona((long) 1, "Franco", 4546555);
+		Persona perModificada = new Persona((long) 1, "Franco A", 4546555);
 		
-		Consultas.guardar(per);
+		//Consultas.guardar(per);
+		Consultas.modificar(perModificada);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import Anotaciones.Columna;
+import Anotaciones.Id;
 import Anotaciones.Tabla;
 import Utilidades.UBeaan;
 
@@ -25,37 +26,28 @@ public class Consultas {
 			
 			String tabla = o.getClass().getAnnotation(Tabla.class).nombre();
 			
-			String nombre = "";
+			String nombres = "";
 			String values = "";
 			
 			for(Field f: UBeaan.obtenerAtributos(o)) {
 				
-				nombre += f.getAnnotation(Columna.class).nombre() + ",";
-				values += "'" + UBeaan.ejecutarGet(o, f.getName()).toString() + "',";
+				String nombre = f.getAnnotation(Columna.class).nombre();
+				
+				nombres += nombre + ",";
+				values += "'" + UBeaan.ejecutarGet(o, nombre).toString() + "',";
 																				
 			}
 			
-			nombre = nombre.substring(0, nombre.length() - 1);
+			nombres = nombres.substring(0, nombres.length() - 1);
 			values = values.substring(0, values.length() - 1);
 			
-			st.execute("insert into "+tabla+" ("+nombre+") values ("+values+")");
+			st.execute("insert into "+tabla+" ("+nombres+") values ("+values+")");
 			
 			c.close();
-			System.out.println("Me conecté a la base de datos");
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}			
-		
-	
-		
-		// Nombre
-		
-		
-		//Valor
-		for(Field f: UBeaan.obtenerAtributos(o)) {
-			// f.getGenericType().getTypeName();
-			
 		}
 		
 		
@@ -67,6 +59,39 @@ public class Consultas {
 	 * @param o
 	 */
 	public static void modificar(Object o) {
+		
+		try {
+			Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
+			Statement st = c.createStatement();
+			
+			String tabla = o.getClass().getAnnotation(Tabla.class).nombre();
+			
+			String nombres = "";
+			String modificacion = "";
+			
+			String id = UBeaan.ejecutarGet(o, "id").toString();
+			
+			for(Field f: UBeaan.obtenerAtributos(o)) {
+				
+				String nombre = f.getAnnotation(Columna.class).nombre();
+				
+				if (!nombre.equalsIgnoreCase("id")) {					
+					nombres += nombre + " = ";
+					nombres += "'" + UBeaan.ejecutarGet(o, nombre).toString() + "',";	
+				}
+													
+			}
+			
+			nombres = nombres.substring(0, nombres.length() - 1);
+			
+			st.execute("update "+tabla+" set "+nombres+" where id = "+id);
+			
+			c.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
