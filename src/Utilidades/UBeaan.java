@@ -60,7 +60,7 @@ public class UBeaan {
 		
 		for(Method m: o.getClass().getDeclaredMethods()) {
 			
-			if(m.getName().equals("att")) {
+			if(m.getName().equalsIgnoreCase("get" + att)) {
 				try {
 					try {
 						retorno = m.invoke(o, null);
