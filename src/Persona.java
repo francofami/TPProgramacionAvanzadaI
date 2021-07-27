@@ -18,6 +18,10 @@ public class Persona {
 		this.dni = dni;
 	}
 	
+	public Persona() {
+		
+	}
+	
 	public Long getId() {
 		return this.id;
 	}

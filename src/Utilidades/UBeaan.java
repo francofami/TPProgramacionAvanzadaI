@@ -33,16 +33,17 @@ public class UBeaan {
 	 */
 	public static void ejecutarSet(Object o, String att, Object valor) {
 		
-		for (Field f: o.getClass().getDeclaredFields()) {
+		for(Method m: o.getClass().getDeclaredMethods()) {
 			
-			try {
-				f.set(valor, att);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(m.getName().equalsIgnoreCase("set" + att)) {
+				
+				try {
+					m.invoke(o, valor);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}		
+				
 			}
 			
 		}
